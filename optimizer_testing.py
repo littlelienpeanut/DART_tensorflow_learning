@@ -20,11 +20,11 @@ b = tf.Variable(tf.zeros([10]))
 prediction = tf.nn.softmax(tf.matmul(x, W) + b)
 
 #define loss function
-#quadratic loss function
-#loss = tf.reduce_mean(tf.square(y - prediction))
 #cross entropy with softmax
 loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=prediction))
-train_step = tf.train.GradientDescentOptimizer(0.2).minimize(loss)
+
+#optimizer choosing
+train_step = tf.train.AdamOptimizer(0.01).minimize(loss)
 
 init = tf.global_variables_initializer()
 
