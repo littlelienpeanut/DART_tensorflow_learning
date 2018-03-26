@@ -1,0 +1,2 @@
+model_checkpoint_path: "C:/Users/105522013/Desktop/DART/Tensorflow_project/projector/projector/a_model.ckpt-1000"
+all_model_checkpoint_paths: "C:/Users/105522013/Desktop/DART/Tensorflow_project/projector/projector/a_model.ckpt-1000"

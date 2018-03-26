@@ -9,6 +9,8 @@ def layer(output_dim, input_dim, input, activation=None):
     W = tf.Variable(tf.random_normal([input_dim, output_dim]))
     b = tf.Variable(tf.random_normal([1, output_dim]))
     XWb = tf.matmul(input, W) + b
+    variable_summaries(W)
+    variable_summaries(b)
     if activation is None:
         outputs = XWb
 
@@ -27,7 +29,6 @@ def variable_summaries(var):
         tf.summary.scalar('stddev', stddev)
         tf.summary.scalar('max', tf.reduce_max(var))
         tf.summary.scalar('min', tf.reduce_min(var))
-        tf.summary.histogram('histogram', var)
 
 
 def main():
@@ -40,15 +41,10 @@ def main():
 
     with tf.name_scope('layer'):
         with tf.name_scope('weights'):
-            W = tf.Variable(tf.random_normal([784, 10]), name='W')
-            variable_summaries(W)
-        with tf.name_scope('biases'):
-            b = tf.Variable(tf.random_normal([1, 10]), name='b')
-            variable_summaries(b)
-        with tf.name_scope('wx_plus_b'):
-            wx_plus_b = tf.matmul(x, W) + b
+            h_L1 = layer(output_dim=256, input_dim=784, input=x, activation=tf.nn.relu)
+
         with tf.name_scope('softmax'):
-            y_prediction = tf.nn.softmax(wx_plus_b)
+            y_prediction = layer(output_dim=10, input_dim=256, input=h_L1, activation=None)
 
     #define loss function, optimizer
     with tf.name_scope('loss'):
@@ -56,7 +52,7 @@ def main():
         tf.summary.scalar('loss', loss) #loss just a value, we don't need to analyze loss.
 
     with tf.name_scope('optimizer'):
-        optimizer = tf.train.GradientDescentOptimizer(1).minimize(loss)
+        optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
 
     with tf.name_scope('correct_prediction'):
         correct_prediction = tf.equal(tf.argmax(y_prediction, 1), tf.argmax(y, 1))
@@ -71,8 +67,8 @@ def main():
         sess.run(init)
         merged = tf.summary.merge_all() #merge the data to show on the tensorboard.
         writer = tf.summary.FileWriter('logs/', sess.graph) #create the directory and add summaries to it.
-        trainEpochs = 21
-        batch_size = 200
+        trainEpochs = 50
+        batch_size = 300
         n_batch = n_batch = mnist.train.num_examples // batch_size
 
         for epoch in range(trainEpochs):
@@ -83,7 +79,7 @@ def main():
             writer.add_summary(summary, epoch)
 
             acc = sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels})
-            print('Iter: ' + str(epoch) + ' acc: ' + str(acc))
+            print('Iter: ' + str(epoch+1) + ' acc: ' + str(acc))
 
 if __name__ == '__main__':
     main()
