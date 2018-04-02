@@ -119,32 +119,32 @@ def main():
     with tf.Session() as sess:
         #Variable
         sess.run(tf.global_variables_initializer())
-        batch_size = 100
+        batch_size = 500
         n_batch = mnist.train.num_examples // batch_size
         epoch_num = 20
         train_writer = tf.summary.FileWriter('logs/train', sess.graph)
         test_writer = tf.summary.FileWriter('logs/test', sess.graph)
 
 
+        for epoch_n in range(2):
+            for batch_i in range(n_batch):
+                print('batch num: ' + str(batch_i))
+                batch_xs, batch_ys = mnist.train.next_batch(batch_size)
+                sess.run(train_step, feed_dict={x:batch_xs, y:batch_ys, keep_prob:0.7})
 
-        for batch_i in range(n_batch):
-            batch_xs, batch_ys = mnist.train.next_batch(batch_size)
-            sess.run(train_step, feed_dict={x:batch_xs, y:batch_ys, keep_prob:0.7})
+                #training error in each batch
+                train_res = sess.run(merged, feed_dict={x:batch_xs, y:batch_ys, keep_prob:1.0})
+                train_writer.add_summary(train_res, batch_i)
 
-            #training error in each batch
-            train_res = sess.run(merged, feed_dict={x:batch_xs, y:batch_ys, keep_prob:1.0})
-            train_writer.add_summary(train_res, batch_i)
+                batch_xs, batch_ys = mnist.test.next_batch(batch_size)
+                test_res = sess.run(merged, feed_dict={x:batch_xs, y:batch_ys, keep_prob:1.0})
+                test_writer.add_summary(test_res, batch_i)
 
-            batch_xs, batch_ys = mnist.test.next_batch(batch_size)
-            test_res = sess.run(merged, feed_dict={x:batch_xs, y:batch_ys, keep_prob:1.0})
-            test_writer.add_summary(test_res, batch_i)
-
-            if batch_i % 100 == 0:
-                training_acc = sess.run(accuracy, feed_dict={x:mnist.train.images, y:mnist.train.labels, keep_prob:1.0})
-                print('Iter: ' + str(batch_i) + ' training acc: ' + str(training_acc))
-                testing_acc = sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels, keep_prob:1.0})
-                print('Iter: ' + str(batch_i) + ' testing acc: ' + str(testing_acc))
-                print('')
+            training_acc = sess.run(accuracy, feed_dict={x:mnist.train.images, y:mnist.train.labels, keep_prob:1.0})
+            print('Iter: ' + str(epoch_n) + ' training acc: ' + str(training_acc))
+            testing_acc = sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels, keep_prob:1.0})
+            print('Iter: ' + str(epoch_n) + ' testing acc: ' + str(testing_acc))
+            print('')
 
 
 
