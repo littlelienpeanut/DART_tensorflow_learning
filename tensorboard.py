@@ -49,7 +49,7 @@ def main():
         writer = tf.summary.FileWriter('logs/', sess.graph)
         trainEpochs = 1
         batch_size = 100
-        n_batch = n_batch = mnist.train.num_examples // batch_size
+        n_batch = mnist.train.num_examples // batch_size
 
         for epoch in range(trainEpochs):
             for batch_num in range(n_batch):

@@ -126,7 +126,7 @@ def main():
         test_writer = tf.summary.FileWriter('logs/test', sess.graph)
 
 
-        for epoch_n in range(2):
+        for epoch_n in range(1):
             for batch_i in range(n_batch):
                 print('batch num: ' + str(batch_i))
                 batch_xs, batch_ys = mnist.train.next_batch(batch_size)

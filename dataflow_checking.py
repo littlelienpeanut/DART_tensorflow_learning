@@ -61,11 +61,10 @@ def main():
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
         tf.summary.scalar('accuracy', accuracy)
 
-    init = tf.global_variables_initializer()
+    merged = tf.summary.merge_all() #merge the data to show on the tensorboard.
 
     with tf.Session() as sess:
-        sess.run(init)
-        merged = tf.summary.merge_all() #merge the data to show on the tensorboard.
+        sess.run(tf.global_variables_initializer())
         writer = tf.summary.FileWriter('logs/', sess.graph) #create the directory and add summaries to it.
         trainEpochs = 50
         batch_size = 300
