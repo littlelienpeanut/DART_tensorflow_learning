@@ -35,6 +35,7 @@ def main():
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = y_prediction, labels = y))
         tf.summary.scalar('cross_entropy', cross_entropy)
+        
     with tf.name_scope('train'):
         train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 

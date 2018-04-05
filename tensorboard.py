@@ -1,5 +1,5 @@
 # use tf.name_scope to name the group name and add the writer = tf.summary.FileWriter('logs/', sess.graph) in the session area to get logs.
-# In the command line, we can use tensorboard --logdir=ADDRESS to build the tensorboard graph
+# In the command line, we can use tensorboard --logdir logs to build the tensorboard graph
 
 import tensorflow as tf
 from time import time
