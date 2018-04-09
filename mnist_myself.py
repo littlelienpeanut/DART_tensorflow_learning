@@ -40,15 +40,12 @@ def main():
         trainEpochs = 15
         batch_size = 100
         n_batch = mnist.train.num_examples // batch_size
-        train_writer = tf.summary.FileWriter('logs/train', sess.graph)
 
         for epoch in range(trainEpochs):
             for batch_num in range(n_batch):
                 batch_x, batch_y = mnist.train.next_batch(batch_size)
                 sess.run(optimizer, feed_dict={x:batch_x, y:batch_y})
 
-                train_res = sess.run(merged, feed_dict={x:batch_x, y:batch_y})
-                train_writer.add_summary(train_res, batch_num)
 
             acc = sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels})
             print('Iter: ' + str(epoch) + ' acc: ' + str(acc))
