@@ -48,7 +48,7 @@ def main():
     merged = tf.summary.merge_all()
 
 
-    with tf.Session() as sess:
+    with tf.Session(config=tf.ConfigProto(log_device_placement = True, allow_soft_placement = True)) as sess:
         #Variable
         epoch_num = 5
         batch_size = 200
