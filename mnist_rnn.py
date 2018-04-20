@@ -6,7 +6,7 @@ def RNN(X, weight, biases):
     max_time = 28
     lstm_size = 50
     inputs = tf.reshape(X, [-1, max_time, n_inputs]) #[batch_size, max_time, n_inputs]
-    lstm_cell = tf.contrib.rnn.core_rnn_cell.BasicLSTMCell(lstm_size)
+    lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(lstm_size, forget_bias=1.0, state_is_tuple=True)
     #final_state[0] is cell state ~ value in memory cell
     #final_state[1] is hidden_state ~ value of h'(memory cell)
     output, final_state = tf.nn.dynamic_rnn(lstm_cell, inputs, dtype = tf.float32)
@@ -35,7 +35,7 @@ def main():
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = y_prediction, labels = y))
         tf.summary.scalar('cross_entropy', cross_entropy)
-        
+
     with tf.name_scope('train'):
         train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 
@@ -46,6 +46,7 @@ def main():
 
     merged = tf.summary.merge_all()
 
+
     with tf.Session() as sess:
         batch_size = 100
         n_batch = mnist.train.num_examples // batch_size
@@ -55,7 +56,6 @@ def main():
 
         for epoch in range(100):
             for batch_i in range(n_batch):
-                print('batch num: ' + str(batch_i))
                 batch_xs, batch_ys = mnist.train.next_batch(batch_size)
                 sess.run(train_step, feed_dict={x:batch_xs, y:batch_ys})
 
@@ -70,4 +70,5 @@ def main():
 
 
 if __name__ == '__main__':
+    tf.reset_default_graph()
     main()

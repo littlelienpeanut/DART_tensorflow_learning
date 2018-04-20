@@ -132,14 +132,6 @@ def main():
                 batch_xs, batch_ys = mnist.train.next_batch(batch_size)
                 sess.run(train_step, feed_dict={x:batch_xs, y:batch_ys, keep_prob:0.7})
 
-                #training error in each batch
-                train_res = sess.run(merged, feed_dict={x:batch_xs, y:batch_ys, keep_prob:1.0})
-                train_writer.add_summary(train_res, batch_i)
-
-                batch_xs, batch_ys = mnist.test.next_batch(batch_size)
-                test_res = sess.run(merged, feed_dict={x:batch_xs, y:batch_ys, keep_prob:1.0})
-                test_writer.add_summary(test_res, batch_i)
-
             training_acc = sess.run(accuracy, feed_dict={x:mnist.train.images, y:mnist.train.labels, keep_prob:1.0})
             print('Iter: ' + str(epoch_n) + ' training acc: ' + str(training_acc))
             testing_acc = sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels, keep_prob:1.0})
