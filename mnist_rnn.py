@@ -6,7 +6,7 @@ def RNN(X, weight, biases):
     max_time = 28
     lstm_size = 50
     inputs = tf.reshape(X, [-1, max_time, n_inputs]) #[batch_size, max_time, n_inputs]
-    lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(lstm_size, forget_bias=1.0, state_is_tuple=True)
+    lstm_cell = tf.contrib.rnn.core_rnn_cell.BasicLSTMCell(lstm_size)
     #final_state[0] is cell state ~ value in memory cell
     #final_state[1] is hidden_state ~ value of h'(memory cell)
     output, final_state = tf.nn.dynamic_rnn(lstm_cell, inputs, dtype = tf.float32)
@@ -54,7 +54,7 @@ def main():
         train_writer = tf.summary.FileWriter('logs/train', sess.graph)
         test_writer = tf.summary.FileWriter('logs/test', sess.graph)
 
-        for epoch in range(100):
+        for epoch in range(1):
             for batch_i in range(n_batch):
                 batch_xs, batch_ys = mnist.train.next_batch(batch_size)
                 sess.run(train_step, feed_dict={x:batch_xs, y:batch_ys})
